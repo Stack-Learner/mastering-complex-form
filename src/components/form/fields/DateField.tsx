@@ -1,7 +1,13 @@
 import { FieldValues, Path, useFormContext } from 'react-hook-form';
 
 import { DateTimePicker } from '@/components/ui/date-time-picker';
-import { FormField, FormItem, FormLabel, FormMessage } from '../../ui/form';
+import {
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from '../../ui/form';
 
 interface Props<T extends FieldValues> {
 	name: Path<T>;
@@ -33,19 +39,23 @@ export const DateField = <T extends FieldValues>({
 			control={control}
 			name={name}
 			render={({ field }) => (
-				<FormItem className="flex flex-col">
+				<FormItem>
 					{label && (
 						<FormLabel htmlFor={name}>
 							<span>{label}</span>
 							{required && <span className="ml-1 text-red-500">*</span>}
 						</FormLabel>
 					)}
-					<DateTimePicker
-						disabled={disabled}
-						value={field.value}
-						onChange={field.onChange}
-						granularity="day"
-					/>
+					<FormControl>
+						<div>
+							<DateTimePicker
+								disabled={disabled}
+								value={field.value}
+								onChange={field.onChange}
+								granularity="day"
+							/>
+						</div>
+					</FormControl>
 					<FormMessage />
 				</FormItem>
 			)}
