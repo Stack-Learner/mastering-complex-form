@@ -1,23 +1,52 @@
-import { TextField } from '@/components/form/fields/TextField';
 import {
 	GenericForm,
 	type GenericFormRef,
 } from '@/components/form/GenericForm';
 import { Stepper } from '@/components/stepper';
 import { useRef } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { EmploymentDetailsFields } from './EmploymentDetailsFields';
+import { ExperiencesFields } from './ExperiencesFields';
+import { PersonalDetailsFields } from './PersonalDetailsFields';
+import { PolicyAgreementsFields } from './PolicyAgreementsFields';
+import { PreviewEmployee } from './PreviewEmployee';
 import { type EmployeeFormValue, EmployeeSchema } from './schema';
+import { SkillsAndGoalsFields } from './SkillsAndGoalsFields';
 import { useTriggerForm } from './useTriggerForm';
-import { ResetButton } from '@/components/form/fields/ResetButton';
 
-const initialValues = {
-	firstName: 'John',
-	lastName: 'Doe',
-	designation: 'Software Engineer',
-	contact: {
-		phone: '1234567890',
-		emergencyContact: '1234567890',
-		email: 'john.doe@example.com',
+const initialValues: EmployeeFormValue = {
+	personalInformation: {
+		fullName: '',
+		dob: new Date(),
+		gender: 'male' as const,
+		contactNumber: '',
+		personalEmail: '',
+		homeAddress: '',
+		emergencyContact: {
+			name: '',
+			relationship: '',
+			contactNumber: '',
+		},
+	},
+	employmentDetails: {
+		jobTitle: '',
+		department: 'engineering',
+		employeeId: '',
+		joiningDate: new Date(),
+		reportingManager: 'John Doe',
+		jobType: 'Full-Time',
+	},
+	professionalExperiences: [],
+	skillsAndGoals: {
+		skills: [],
+		goal: '',
+	},
+	policyAgreements: {
+		policy: false,
+		codeOfConduct: false,
+		nda: false,
+	},
+	confirmation: {
+		confirm: false,
 	},
 };
 
@@ -45,74 +74,82 @@ export const EmployeeOnboarding = () => {
 			ref={formRef}
 		>
 			<Stepper onComplete={clickSubmit}>
+				{/* Personal Details */}
 				<Stepper.Step
 					validate={() =>
 						triggerForm(formRef.current?.form, [
-							'firstName',
-							'lastName',
-							'designation',
+							'personalInformation.fullName',
+							'personalInformation.dob',
+							'personalInformation.contactNumber',
+							'personalInformation.personalEmail',
+							'personalInformation.homeAddress',
+							'personalInformation.emergencyContact.name',
+							'personalInformation.emergencyContact.relationship',
+							'personalInformation.emergencyContact.contactNumber',
 						])
 					}
 				>
-					<div>
-						<h1 className='text-2xl font-bold'>Personal Information</h1>
-						<p className='text-sm text-muted-foreground'>
-							Please fill in your personal information to get started.
-						</p>
-					</div>
-					<div className='space-y-4'>
-						<div className='flex gap-4'>
-							<div className='flex-1'>
-								<TextField<EmployeeFormValue>
-									name='firstName'
-									label='First Name'
-								/>
-							</div>
-							<div className='flex-1'>
-								<TextField<EmployeeFormValue>
-									name='lastName'
-									label='Last Name'
-								/>
-							</div>
-						</div>
-						<TextField<EmployeeFormValue>
-							name='designation'
-							label='Designation'
-						/>
-					</div>
+					<PersonalDetailsFields />
 				</Stepper.Step>
+
+				{/* Employment Details */}
 				<Stepper.Step
 					validate={() =>
 						triggerForm(formRef.current?.form, [
-							'contact.phone',
-							'contact.email',
-							'contact.emergencyContact',
+							'employmentDetails.department',
+							'employmentDetails.jobTitle',
+							'employmentDetails.employeeId',
+							'employmentDetails.joiningDate',
+							'employmentDetails.reportingManager',
+							'employmentDetails.jobType',
+							'employmentDetails.salary',
 						])
 					}
 				>
-					<div>
-						<h1 className='text-2xl font-bold'>Contact Information</h1>
-						<p className='text-sm text-muted-foreground'>
-							Please fill in your contact information to get started.
-						</p>
-					</div>
-					<div>
-						<TextField<EmployeeFormValue>
-							name='contact.phone'
-							label='Phone Number'
-						/>
-						<TextField<EmployeeFormValue>
-							name='contact.emergencyContact'
-							label='Emergency Contact'
-						/>
-						<TextField<EmployeeFormValue> name='contact.email' label='Email' />
-					</div>
+					<EmploymentDetailsFields />
 				</Stepper.Step>
+
+				{/* Professional Experiences */}
+				<Stepper.Step
+					validate={() =>
+						triggerForm(formRef.current?.form, ['professionalExperiences'])
+					}
+				>
+					<ExperiencesFields />
+				</Stepper.Step>
+
+				{/* Skills & Goals */}
+				<Stepper.Step
+					validate={() =>
+						triggerForm(formRef.current?.form, [
+							'skillsAndGoals.goal',
+							'skillsAndGoals.skills',
+						])
+					}
+				>
+					<SkillsAndGoalsFields />
+				</Stepper.Step>
+
+				{/* Policy Agreements */}
+				<Stepper.Step
+					validate={() =>
+						triggerForm(formRef.current?.form, [
+							'policyAgreements.policy',
+							'policyAgreements.codeOfConduct',
+							'policyAgreements.nda',
+						])
+					}
+				>
+					<PolicyAgreementsFields />
+				</Stepper.Step>
+
+				{/* Preview Employee */}
 				<Stepper.Step>
 					<PreviewEmployee />
 				</Stepper.Step>
 			</Stepper>
-			<button ref={submitRef} type='submit' hidden>
+
+			<button ref={submitRef} type="submit" hidden>
 				Submit
 			</button>
 		</GenericForm>
@@ -120,37 +157,3 @@ export const EmployeeOnboarding = () => {
 };
 
 export default EmployeeOnboarding;
-
-const PreviewEmployee = () => {
-	const context = useFormContext();
-	const formValues = context.getValues();
-
-	return (
-		<div>
-			<div>
-				<h1 className='text-2xl font-bold'>Preview Employee</h1>
-				<p className='text-sm text-muted-foreground'>
-					Please review the employee information to ensure it is correct.
-				</p>
-			</div>
-			<div>
-				<div>
-					<h2 className='text-lg font-bold'>Personal Information</h2>
-					<p>
-						{formValues?.firstName} {formValues?.lastName}
-					</p>
-					<p>{formValues?.designation}</p>
-				</div>
-				<div>
-					<h2 className='text-lg font-bold'>Contact Information</h2>
-					<p>{formValues?.contact.phone}</p>
-					<p>{formValues?.contact.emergencyContact}</p>
-					<p>{formValues?.contact.email}</p>
-				</div>
-			</div>
-			<div className='flex justify-end'>
-				<ResetButton />
-			</div>
-		</div>
-	);
-};
