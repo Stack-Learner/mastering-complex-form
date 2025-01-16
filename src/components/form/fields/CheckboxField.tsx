@@ -88,7 +88,7 @@ export const CheckboxField = <T extends FieldValues>({
 						</div>
 					</FormControl>
 
-					<FormMessage />
+					<FormMessage className="ml-6 text-xs mt-1" />
 				</FormItem>
 			)}
 		/>
