@@ -9,46 +9,19 @@ import { ExperiencesFields } from './ExperiencesFields';
 import { PersonalDetailsFields } from './PersonalDetailsFields';
 import { PolicyAgreementsFields } from './PolicyAgreementsFields';
 import { PreviewEmployee } from './PreviewEmployee';
-import { type EmployeeFormValue, EmployeeSchema } from './schema';
+import {
+	confirmationPaths,
+	type EmployeeFormValue,
+	EmployeeSchema,
+	employmentDetailsPaths,
+	experiencesPaths,
+	initialValues,
+	personalDetailsPaths,
+	policyAgreementsPaths,
+	skillsAndGoalsPaths,
+} from './schema';
 import { SkillsAndGoalsFields } from './SkillsAndGoalsFields';
 import { useTriggerForm } from './useTriggerForm';
-
-const initialValues: EmployeeFormValue = {
-	personalInformation: {
-		fullName: '',
-		dob: new Date(),
-		gender: 'male' as const,
-		contactNumber: '',
-		personalEmail: '',
-		homeAddress: '',
-		emergencyContact: {
-			name: '',
-			relationship: '',
-			contactNumber: '',
-		},
-	},
-	employmentDetails: {
-		jobTitle: '',
-		department: 'engineering',
-		employeeId: '',
-		joiningDate: new Date(),
-		reportingManager: 'John Doe',
-		jobType: 'Full-Time',
-	},
-	professionalExperiences: [],
-	skillsAndGoals: {
-		skills: [],
-		goal: '',
-	},
-	policyAgreements: {
-		policy: false,
-		codeOfConduct: false,
-		nda: false,
-	},
-	confirmation: {
-		confirm: false,
-	},
-};
 
 export const EmployeeOnboarding = () => {
 	const formRef = useRef<GenericFormRef<EmployeeFormValue>>(null);
@@ -77,16 +50,7 @@ export const EmployeeOnboarding = () => {
 				{/* Personal Details */}
 				<Stepper.Step
 					validate={() =>
-						triggerForm(formRef.current?.form, [
-							'personalInformation.fullName',
-							'personalInformation.dob',
-							'personalInformation.contactNumber',
-							'personalInformation.personalEmail',
-							'personalInformation.homeAddress',
-							'personalInformation.emergencyContact.name',
-							'personalInformation.emergencyContact.relationship',
-							'personalInformation.emergencyContact.contactNumber',
-						])
+						triggerForm(formRef.current?.form, [...personalDetailsPaths])
 					}
 				>
 					<PersonalDetailsFields />
@@ -95,15 +59,7 @@ export const EmployeeOnboarding = () => {
 				{/* Employment Details */}
 				<Stepper.Step
 					validate={() =>
-						triggerForm(formRef.current?.form, [
-							'employmentDetails.department',
-							'employmentDetails.jobTitle',
-							'employmentDetails.employeeId',
-							'employmentDetails.joiningDate',
-							'employmentDetails.reportingManager',
-							'employmentDetails.jobType',
-							'employmentDetails.salary',
-						])
+						triggerForm(formRef.current?.form, [...employmentDetailsPaths])
 					}
 				>
 					<EmploymentDetailsFields />
@@ -112,7 +68,7 @@ export const EmployeeOnboarding = () => {
 				{/* Professional Experiences */}
 				<Stepper.Step
 					validate={() =>
-						triggerForm(formRef.current?.form, ['professionalExperiences'])
+						triggerForm(formRef.current?.form, [...experiencesPaths])
 					}
 				>
 					<ExperiencesFields />
@@ -121,10 +77,7 @@ export const EmployeeOnboarding = () => {
 				{/* Skills & Goals */}
 				<Stepper.Step
 					validate={() =>
-						triggerForm(formRef.current?.form, [
-							'skillsAndGoals.goal',
-							'skillsAndGoals.skills',
-						])
+						triggerForm(formRef.current?.form, [...skillsAndGoalsPaths])
 					}
 				>
 					<SkillsAndGoalsFields />
@@ -133,18 +86,18 @@ export const EmployeeOnboarding = () => {
 				{/* Policy Agreements */}
 				<Stepper.Step
 					validate={() =>
-						triggerForm(formRef.current?.form, [
-							'policyAgreements.policy',
-							'policyAgreements.codeOfConduct',
-							'policyAgreements.nda',
-						])
+						triggerForm(formRef.current?.form, [...policyAgreementsPaths])
 					}
 				>
 					<PolicyAgreementsFields />
 				</Stepper.Step>
 
 				{/* Preview Employee */}
-				<Stepper.Step>
+				<Stepper.Step
+					validate={() =>
+						triggerForm(formRef.current?.form, [...confirmationPaths])
+					}
+				>
 					<PreviewEmployee />
 				</Stepper.Step>
 			</Stepper>

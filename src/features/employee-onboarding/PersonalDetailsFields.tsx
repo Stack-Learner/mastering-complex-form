@@ -35,9 +35,15 @@ export const PersonalDetailsFields = () => {
 					<h2 className="text-lg font-medium">Basic Details</h2>
 					<div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
 						<TextField<EmployeeFormValue>
-							name="personalInformation.fullName"
-							label="Full Name"
-							placeholder="Enter your full name"
+							name="personalInformation.firstName"
+							label="First Name"
+							placeholder="Enter First name"
+							required
+						/>
+						<TextField<EmployeeFormValue>
+							name="personalInformation.lastName"
+							label="Last Name"
+							placeholder="Enter Last name"
 							required
 						/>
 						<DateField<EmployeeFormValue>
@@ -45,6 +51,7 @@ export const PersonalDetailsFields = () => {
 							label="Date of Birth"
 							required
 						/>
+						<div></div>
 						<RadioGroupField<EmployeeFormValue>
 							name="personalInformation.gender"
 							label="Gender"

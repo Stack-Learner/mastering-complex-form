@@ -21,29 +21,23 @@ export const PolicyAgreementsFields = () => {
 
 			{/* Agreements Section */}
 			<div className="space-y-6">
-				<Card className="p-4 hover:bg-muted/50 transition-colors">
-					<CheckboxField<EmployeeFormValue>
-						name="policyAgreements.policy"
-						label="I have read and agree to comply with all company policies and procedures"
-						required
-					/>
-				</Card>
+				<CheckboxField<EmployeeFormValue>
+					name="policyAgreements.policy"
+					label="I have read and agree to comply with all company policies and procedures"
+					required
+				/>
 
-				<Card className="p-4 hover:bg-muted/50 transition-colors">
-					<CheckboxField<EmployeeFormValue>
-						name="policyAgreements.codeOfConduct"
-						label="I agree to adhere to the company's code of conduct and ethical guidelines"
-						required
-					/>
-				</Card>
+				<CheckboxField<EmployeeFormValue>
+					name="policyAgreements.codeOfConduct"
+					label="I agree to adhere to the company's code of conduct and ethical guidelines"
+					required
+				/>
 
-				<Card className="p-4 hover:bg-muted/50 transition-colors">
-					<CheckboxField<EmployeeFormValue>
-						name="policyAgreements.nda"
-						label="I understand and agree to protect confidential company information"
-						required
-					/>
-				</Card>
+				<CheckboxField<EmployeeFormValue>
+					name="policyAgreements.nda"
+					label="I understand and agree to protect confidential company information"
+					required
+				/>
 			</div>
 		</Card>
 	);
