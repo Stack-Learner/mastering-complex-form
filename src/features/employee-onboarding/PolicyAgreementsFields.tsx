@@ -25,6 +25,7 @@ export const PolicyAgreementsFields = () => {
 					<CheckboxField<EmployeeFormValue>
 						name="policyAgreements.policy"
 						label="I have read and agree to comply with all company policies and procedures"
+						required
 					/>
 				</Card>
 
@@ -32,6 +33,7 @@ export const PolicyAgreementsFields = () => {
 					<CheckboxField<EmployeeFormValue>
 						name="policyAgreements.codeOfConduct"
 						label="I agree to adhere to the company's code of conduct and ethical guidelines"
+						required
 					/>
 				</Card>
 
@@ -39,6 +41,7 @@ export const PolicyAgreementsFields = () => {
 					<CheckboxField<EmployeeFormValue>
 						name="policyAgreements.nda"
 						label="I understand and agree to protect confidential company information"
+						required
 					/>
 				</Card>
 			</div>

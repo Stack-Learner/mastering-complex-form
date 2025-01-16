@@ -38,16 +38,19 @@ export const PersonalDetailsFields = () => {
 							name="personalInformation.fullName"
 							label="Full Name"
 							placeholder="Enter your full name"
+							required
 						/>
 						<DateField<EmployeeFormValue>
 							name="personalInformation.dob"
 							label="Date of Birth"
+							required
 						/>
 						<RadioGroupField<EmployeeFormValue>
 							name="personalInformation.gender"
 							label="Gender"
 							options={genderOptions}
 							className="col-span-full"
+							required
 						/>
 					</div>
 				</div>
@@ -60,11 +63,13 @@ export const PersonalDetailsFields = () => {
 							name="personalInformation.contactNumber"
 							label="Contact Number"
 							placeholder="Enter your contact number"
+							required
 						/>
 						<TextField<EmployeeFormValue>
 							name="personalInformation.personalEmail"
 							label="Personal Email"
 							placeholder="Enter your personal email"
+							required
 						/>
 						<TextAreaField<EmployeeFormValue>
 							name="personalInformation.homeAddress"
@@ -72,6 +77,7 @@ export const PersonalDetailsFields = () => {
 							className="col-span-full"
 							autoResize
 							placeholder="Enter your home address"
+							required
 						/>
 					</div>
 				</div>
@@ -84,16 +90,19 @@ export const PersonalDetailsFields = () => {
 							name="personalInformation.emergencyContact.name"
 							label="Emergency Contact Name"
 							placeholder="Enter emergency contact name"
+							required
 						/>
 						<TextField<EmployeeFormValue>
 							name="personalInformation.emergencyContact.relationship"
 							label="Relationship"
 							placeholder="Enter relationship"
+							required
 						/>
 						<TextField<EmployeeFormValue>
 							name="personalInformation.emergencyContact.contactNumber"
 							label="Contact Number"
 							placeholder="Enter contact number"
+							required
 						/>
 					</div>
 				</div>

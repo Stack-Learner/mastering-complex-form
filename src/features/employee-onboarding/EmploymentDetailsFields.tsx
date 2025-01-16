@@ -4,6 +4,7 @@ import { SelectField } from '@/components/form/fields/SelectField';
 import { TextField } from '@/components/form/fields/TextField';
 import { Card } from '@/components/ui/card';
 import { Briefcase } from 'lucide-react';
+import { useFormContext } from 'react-hook-form';
 import { StepHeader } from './components/StepHeader';
 import { EmployeeFormValue } from './schema';
 
@@ -13,6 +14,9 @@ import { EmployeeFormValue } from './schema';
  */
 
 export const EmploymentDetailsFields = () => {
+	const { watch } = useFormContext<EmployeeFormValue>();
+	const jobType = watch('employmentDetails.jobType');
+
 	return (
 		<Card className="p-6 space-y-6">
 			{/* Header */}
@@ -31,10 +35,12 @@ export const EmploymentDetailsFields = () => {
 							name="employmentDetails.employeeId"
 							label="Employee ID"
 							placeholder="Enter employee ID"
+							required
 						/>
 						<DateField<EmployeeFormValue>
 							name="employmentDetails.joiningDate"
 							label="Joining Date"
+							required
 						/>
 					</div>
 				</div>
@@ -47,6 +53,7 @@ export const EmploymentDetailsFields = () => {
 							name="employmentDetails.jobTitle"
 							label="Job Title"
 							placeholder="Enter job title"
+							required
 						/>
 						<SelectField<EmployeeFormValue>
 							name="employmentDetails.department"
@@ -57,6 +64,7 @@ export const EmploymentDetailsFields = () => {
 								{ value: 'marketing', text: 'Marketing' },
 							]}
 							placeholder="Select a department"
+							required
 						/>
 						<SelectField<EmployeeFormValue>
 							name="employmentDetails.reportingManager"
@@ -67,6 +75,7 @@ export const EmploymentDetailsFields = () => {
 								{ value: 'Michael Doe', text: 'Michael Doe' },
 							]}
 							placeholder="Select a manager"
+							required
 						/>
 					</div>
 				</div>
@@ -84,12 +93,14 @@ export const EmploymentDetailsFields = () => {
 								{ value: 'Contract', text: 'Contract' },
 							]}
 							className="col-span-full"
+							required
 						/>
 						<TextField<EmployeeFormValue>
 							name="employmentDetails.salary"
 							label="Salary"
 							type="number"
 							placeholder="Enter salary"
+							required={jobType === 'Full-Time'}
 						/>
 					</div>
 				</div>

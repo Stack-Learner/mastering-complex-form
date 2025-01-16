@@ -36,6 +36,7 @@ export const ExperiencesFields = () => {
 									endDate: new Date(),
 								})
 							}
+							type="button"
 							variant="outline"
 							className="w-full border-dashed h-20 hover:border-primary hover:bg-primary/5"
 						>
@@ -61,6 +62,7 @@ export const ExperiencesFields = () => {
 										size="icon"
 										variant="ghost"
 										onClick={() => remove(index)}
+										type="button"
 										className="hover:text-red-500 transition-colors"
 									>
 										<Trash2 size={18} />

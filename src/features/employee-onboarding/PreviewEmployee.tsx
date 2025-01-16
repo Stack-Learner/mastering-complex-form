@@ -272,6 +272,7 @@ export const PreviewEmployee = () => {
 						<CheckboxField<EmployeeFormValue>
 							name="confirmation.confirm"
 							label="I confirm that all the information provided above is accurate and complete"
+							required
 						/>
 					</Card>
 				</div>
