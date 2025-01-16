@@ -1,5 +1,13 @@
 import { z } from 'zod';
 
+// Add phone validation regex pattern
+const phoneRegex = /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/;
+
+// Create phone schema
+const phoneSchema = z.string().min(1).regex(phoneRegex, {
+	message: 'Please enter a valid phone number',
+});
+
 const EmploymentDetails1 = z.object({
 	jobTitle: z.string().min(1, 'Job title is required'),
 	department: z.enum(['engineering', 'hr', 'marketing']),
@@ -41,30 +49,37 @@ const EmploymentDetails2 = z
 
 export const EmployeeSchema = z.object({
 	personalInformation: z.object({
-		fullName: z.string().min(1, 'Full name is required'),
+		firstName: z.string().min(1, 'First name is required'),
+		lastName: z.string().min(1, 'Last name is required'),
 		dob: z.date({
 			message: 'Please enter a valid date',
 		}),
 		gender: z.enum(['male', 'female', 'other']),
-		contactNumber: z.string().min(1, 'Contact number is required'),
+		contactNumber: phoneSchema,
 		personalEmail: z.string().email('Please enter a valid email'),
 		homeAddress: z.string().min(1, 'Home address is required'),
 		emergencyContact: z.object({
 			name: z.string().min(1, 'Emergency contact name is required'),
 			relationship: z.string().min(1, 'Relationship is required'),
-			contactNumber: z.string().min(1, 'Contact number is required'),
+			contactNumber: phoneSchema,
 		}),
 	}),
 	employmentDetails: z.intersection(EmploymentDetails1, EmploymentDetails2),
-	professionalExperiences: z.array(
-		z.object({
-			companyName: z.string().optional(),
-			jobTitle: z.string().optional(),
-			startDate: z.date().optional(),
-			endDate: z.date().optional(),
-			jobSummary: z.string().optional(),
-		})
-	),
+	professionalExperiences: z
+		.array(
+			z.object({
+				companyName: z.string().min(1, 'Company name is required'),
+				jobTitle: z.string().min(1, 'Job title is required'),
+				startDate: z.date({
+					message: 'Please enter a valid date',
+				}),
+				endDate: z.date({
+					message: 'Please enter a valid date',
+				}),
+				jobSummary: z.string().optional(),
+			})
+		)
+		.optional(),
 	skillsAndGoals: z.object({
 		skills: z.array(z.string().optional()).optional(),
 		goal: z.string().optional(),
@@ -88,3 +103,75 @@ export const EmployeeSchema = z.object({
 });
 
 export type EmployeeFormValue = z.infer<typeof EmployeeSchema>;
+
+export const initialValues: EmployeeFormValue = {
+	personalInformation: {
+		firstName: '',
+		lastName: '',
+		dob: new Date(),
+		gender: 'male' as const,
+		contactNumber: '',
+		personalEmail: '',
+		homeAddress: '',
+		emergencyContact: {
+			name: '',
+			relationship: '',
+			contactNumber: '',
+		},
+	},
+	employmentDetails: {
+		jobTitle: '',
+		department: 'engineering',
+		employeeId: '',
+		joiningDate: new Date(),
+		reportingManager: 'John Doe',
+		jobType: 'Full-Time',
+	},
+	professionalExperiences: [],
+	skillsAndGoals: {},
+	policyAgreements: {
+		policy: false,
+		codeOfConduct: false,
+		nda: false,
+	},
+	confirmation: {
+		confirm: false,
+	},
+};
+
+export const personalDetailsPaths = [
+	'personalInformation.firstName',
+	'personalInformation.lastName',
+	'personalInformation.dob',
+	'personalInformation.contactNumber',
+	'personalInformation.personalEmail',
+	'personalInformation.homeAddress',
+	'personalInformation.emergencyContact.name',
+	'personalInformation.emergencyContact.relationship',
+	'personalInformation.emergencyContact.contactNumber',
+] as const;
+
+export const employmentDetailsPaths = [
+	'employmentDetails.department',
+	'employmentDetails.jobTitle',
+	'employmentDetails.employeeId',
+	'employmentDetails.joiningDate',
+	'employmentDetails.reportingManager',
+	'employmentDetails.jobType',
+	'employmentDetails.salary',
+] as const;
+
+export const experiencesPaths = ['professionalExperiences'] as const;
+
+export const skillsAndGoalsPaths = [
+	'skillsAndGoals.skills',
+	'skillsAndGoals.goal',
+] as const;
+
+export const policyAgreementsPaths = [
+	'policyAgreements.policy',
+	'policyAgreements.codeOfConduct',
+	'policyAgreements.nda',
+] as const;
+
+export const confirmationPaths = ['confirmation.confirm'] as const;
