@@ -2,11 +2,11 @@ import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Button } from '../ui/button';
-import { Calendar } from '../ui/calendar';
-import { Checkbox } from '../ui/checkbox';
+import { Button } from '../../components/ui/button';
+import { Calendar } from '../../components/ui/calendar';
+import { Checkbox } from '../../components/ui/checkbox';
 import {
 	Form,
 	FormControl,
@@ -14,20 +14,24 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from '../ui/form';
-import { Input } from '../ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+} from '../../components/ui/form';
+import { Input } from '../../components/ui/input';
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from '../../components/ui/popover';
+import { RadioGroup, RadioGroupItem } from '../../components/ui/radio-group';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from '../ui/select';
+} from '../../components/ui/select';
 
 // Define the schema using Zod
-const FormSchema = z.object({
+const FormSchema1 = z.object({
 	name: z.string().min(1, 'Name is required'),
 	email: z.string().email('Invalid email address'),
 	secondaryEmail: z.string().email().optional(),
@@ -50,32 +54,66 @@ const FormSchema = z.object({
 	department: z.enum(['engineering', 'marketing', 'sales', 'hr', 'finance'], {
 		errorMap: () => ({ message: 'Department is required' }),
 	}),
-	salary: z.string().min(1, 'Salary is required'),
+	workHistories: z
+		.array(
+			z.object({
+				companyName: z.string().optional(),
+				jobTitle: z.string().optional(),
+				startDate: z.date().optional(),
+				endDate: z.date().optional(),
+			})
+		)
+		.optional(),
 	terms: z.boolean().refine((val) => val === true, {
 		message: 'You must accept the terms and conditions',
 	}),
 });
 
+const FormSchema2 = z
+	.object({
+		jobType: z.enum(['Full-Time', 'Part-Time', 'Contract'], {
+			errorMap: () => ({ message: 'Job Type is required' }),
+		}),
+		salary: z.coerce.number(),
+	})
+	.superRefine((val, ctx) => {
+		if (val.jobType === 'Full-Time' && val.salary <= 0) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: 'Salary is required for Full-Time jobs',
+				path: ['salary'],
+			});
+		}
+		return true;
+	});
+
+const FormSchema = z.intersection(FormSchema1, FormSchema2);
+
 type FormType = z.infer<typeof FormSchema>;
 
-const EmployeeRegistrationForm = () => {
+const EmployeeRegistrationForm3 = () => {
 	const form = useForm<FormType>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
-			name: '',
-			email: '',
+			name: 'Aditya Chakraborty',
+			email: 'aditya@gmail.com',
 			gender: 'male',
 			address: {
-				street: '',
-				city: '',
-				state: '',
-				zip: '',
+				street: 'Chawkbazar',
+				city: 'Chattogram',
+				state: 'Chattogram',
+				zip: '4203',
 			},
-			jobTitle: '',
+			jobTitle: 'Software Engineering',
 			department: 'engineering',
-			salary: '0',
+			salary: 20000,
 			terms: false,
 		},
+	});
+
+	const { fields, append, remove } = useFieldArray({
+		control: form.control,
+		name: 'workHistories',
 	});
 
 	const onSubmit = (data: FormType) => {
@@ -317,17 +355,198 @@ const EmployeeRegistrationForm = () => {
 				<div className="grid grid-cols-2 gap-8">
 					<FormField
 						control={form.control}
+						name="jobType"
+						render={({ field }) => (
+							<FormItem className="space-y-3">
+								<FormLabel>Job Type</FormLabel>
+								<FormControl>
+									<RadioGroup
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+										className="flex flex-row"
+									>
+										{['Full-Time', 'Part-Time', 'Contract'].map((type) => (
+											<FormItem
+												key={type}
+												className="flex items-center space-x-3 space-y-0"
+											>
+												<FormControl>
+													<RadioGroupItem value={type} />
+												</FormControl>
+												<FormLabel className="font-normal">{type}</FormLabel>
+											</FormItem>
+										))}
+									</RadioGroup>
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
 						name="salary"
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Salary</FormLabel>
 								<FormControl>
-									<Input {...field} />
+									<Input type="number" {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
+				</div>
+
+				<div className="space-y-8">
+					{fields.map((history, index) => (
+						<div key={history.id} className="space-y-8">
+							<div className="grid grid-cols-2 gap-8">
+								<FormField
+									control={form.control}
+									name={`workHistories.${index}.companyName`}
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Company Name</FormLabel>
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name={`workHistories.${index}.jobTitle`}
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Job Title</FormLabel>
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+
+							<div className="grid grid-cols-2 gap-8">
+								<FormField
+									control={form.control}
+									name={`workHistories.${index}.startDate`}
+									render={({ field }) => (
+										<FormItem>
+											<div className="space-y-2">
+												<FormLabel>Start Date</FormLabel>
+												<Popover>
+													<PopoverTrigger asChild>
+														<FormControl>
+															<Button
+																variant={'outline'}
+																className={cn(
+																	'w-full pl-3 text-left font-normal',
+																	!field.value && 'text-muted-foreground'
+																)}
+															>
+																{field.value ? (
+																	format(field.value, 'PPP')
+																) : (
+																	<span>Pick a date</span>
+																)}
+																<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+															</Button>
+														</FormControl>
+													</PopoverTrigger>
+													<PopoverContent className="w-auto p-0" align="start">
+														<Calendar
+															mode="single"
+															selected={field.value}
+															onSelect={field.onChange}
+															disabled={(date) =>
+																date > new Date() ||
+																date < new Date('1900-01-01')
+															}
+															initialFocus
+														/>
+													</PopoverContent>
+												</Popover>
+											</div>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name={`workHistories.${index}.endDate`}
+									render={({ field }) => (
+										<FormItem>
+											<div className="space-y-2">
+												<FormLabel>End Date</FormLabel>
+												<Popover>
+													<PopoverTrigger asChild>
+														<FormControl>
+															<Button
+																variant={'outline'}
+																className={cn(
+																	'w-full pl-3 text-left font-normal',
+																	!field.value && 'text-muted-foreground'
+																)}
+															>
+																{field.value ? (
+																	format(field.value, 'PPP')
+																) : (
+																	<span>Pick a date</span>
+																)}
+																<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+															</Button>
+														</FormControl>
+													</PopoverTrigger>
+													<PopoverContent className="w-auto p-0" align="start">
+														<Calendar
+															mode="single"
+															selected={field.value}
+															onSelect={field.onChange}
+															disabled={(date) =>
+																date > new Date() ||
+																date < new Date('1900-01-01')
+															}
+															initialFocus
+														/>
+													</PopoverContent>
+												</Popover>
+											</div>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+
+							<Button
+								variant="outline"
+								onClick={() => remove(index)}
+								className="justify-center"
+							>
+								Remove
+							</Button>
+						</div>
+					))}
+
+					<Button
+						variant="outline"
+						onClick={() =>
+							append({
+								companyName: '',
+								jobTitle: '',
+								startDate: new Date(),
+								endDate: new Date(),
+							})
+						}
+						className="justify-center"
+						type="button"
+					>
+						Add Work History
+					</Button>
 				</div>
 
 				<FormField
@@ -357,4 +576,4 @@ const EmployeeRegistrationForm = () => {
 	);
 };
 
-export default EmployeeRegistrationForm;
+export default EmployeeRegistrationForm3;
