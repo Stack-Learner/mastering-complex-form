@@ -4,11 +4,12 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
+	FormMessage,
 } from '@/components/ui/form';
 import { cn } from '@/lib/utils';
 import { FieldValues, Path, useFormContext } from 'react-hook-form';
 
-interface Props<T extends FieldValues> {
+type Props<T extends FieldValues> = {
 	name: Path<T>;
 	label?: string;
 	required?: boolean;
@@ -18,7 +19,7 @@ interface Props<T extends FieldValues> {
 	reverse?: boolean;
 	gap?: '2' | '4' | '6' | '8';
 	className?: string;
-}
+};
 
 /**
  * CheckboxField. A checkbox field component.
@@ -81,11 +82,13 @@ export const CheckboxField = <T extends FieldValues>({
 									className={cn(reverse ? 'order-0' : 'order-1')}
 								>
 									<span>{label}</span>
-									{required && <span className='ml-1 text-red-500'>*</span>}
+									{required && <span className="ml-1 text-red-500">*</span>}
 								</FormLabel>
 							)}
 						</div>
 					</FormControl>
+
+					<FormMessage />
 				</FormItem>
 			)}
 		/>

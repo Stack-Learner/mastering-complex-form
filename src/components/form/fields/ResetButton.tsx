@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { useFormContext } from 'react-hook-form';
 
 type Props = {
@@ -7,6 +7,15 @@ type Props = {
 	disabled?: boolean;
 	className?: string;
 };
+
+/**
+ * ResetButton component
+ *
+ * @param resetLabel - The label for the reset button.
+ * @param disabled - Whether the button is disabled.
+ * @param className - The class name for the button.
+ * @returns The ResetButton component.
+ */
 
 export const ResetButton = ({
 	resetLabel = 'Reset',
@@ -16,7 +25,7 @@ export const ResetButton = ({
 	const form = useFormContext();
 	return (
 		<Button
-			type='reset'
+			type="reset"
 			variant={'outline'}
 			size={'sm'}
 			disabled={disabled}

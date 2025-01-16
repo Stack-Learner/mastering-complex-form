@@ -1,5 +1,3 @@
-import { cn } from '@/lib/utils';
-import { FieldValues, Path, useFormContext } from 'react-hook-form';
 import {
 	FormControl,
 	FormField,
@@ -8,8 +6,10 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
+import { cn } from '@/lib/utils';
+import { FieldValues, Path, useFormContext } from 'react-hook-form';
 
-interface SwitchFieldProps<T extends FieldValues> {
+type SwitchFieldProps<T extends FieldValues> = {
 	name: Path<T>;
 	label?: string;
 	className?: string;
@@ -19,7 +19,7 @@ interface SwitchFieldProps<T extends FieldValues> {
 	longGap?: boolean;
 	reverse?: boolean;
 	gap?: '2' | '4' | '6' | '8';
-}
+};
 
 /**
  * SwitchField

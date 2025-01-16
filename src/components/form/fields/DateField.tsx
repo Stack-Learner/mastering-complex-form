@@ -9,12 +9,13 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 
-interface Props<T extends FieldValues> {
+type Props<T extends FieldValues> = {
 	name: Path<T>;
 	label?: string;
 	required?: boolean;
 	disabled?: boolean;
-}
+	className?: string;
+};
 
 /**
  * DateField component
@@ -23,6 +24,7 @@ interface Props<T extends FieldValues> {
  * @param label - The label for the field.
  * @param required - Whether the field is required.
  * @param disabled - Whether the field is disabled.
+ * @param className - The class name for the field.
  * @returns The DateField component.
  */
 
@@ -31,6 +33,7 @@ export const DateField = <T extends FieldValues>({
 	label,
 	required = false,
 	disabled = false,
+	className,
 }: Props<T>) => {
 	const { control } = useFormContext<T>();
 
@@ -39,7 +42,7 @@ export const DateField = <T extends FieldValues>({
 			control={control}
 			name={name}
 			render={({ field }) => (
-				<FormItem>
+				<FormItem className={className}>
 					{label && (
 						<FormLabel htmlFor={name}>
 							<span>{label}</span>

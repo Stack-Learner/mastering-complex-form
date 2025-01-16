@@ -1,4 +1,3 @@
-import { FieldValues, Path, useFormContext } from 'react-hook-form';
 import {
 	FormControl,
 	FormField,
@@ -13,14 +12,16 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
+import { FieldValues, Path, useFormContext } from 'react-hook-form';
 
-interface Props<T extends FieldValues> {
+type Props<T extends FieldValues> = {
 	name: Path<T>;
 	label?: string;
 	placeholder?: string;
 	options: { value: string; text: string }[];
 	required?: boolean;
-}
+	className?: string;
+};
 
 /**
  * SelectField component
@@ -30,6 +31,7 @@ interface Props<T extends FieldValues> {
  * @param {string} placeholder - The placeholder of the field
  * @param {Array<{ value: string, text: string }>} options - The options of the field
  * @param {boolean} required - Whether the field is required
+ * @param {string} className - The class name of the field
  *
  * @returns {ReactElement} - The select field component
  *
@@ -49,6 +51,7 @@ export const SelectField = <T extends FieldValues>({
 	placeholder,
 	options,
 	required = false,
+	className,
 }: Props<T>) => {
 	const { control } = useFormContext<T>();
 
@@ -57,7 +60,7 @@ export const SelectField = <T extends FieldValues>({
 			name={name}
 			control={control}
 			render={({ field }) => (
-				<FormItem>
+				<FormItem className={className}>
 					{label && (
 						<FormLabel>
 							<span>{label}</span>
