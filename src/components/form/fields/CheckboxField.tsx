@@ -10,7 +10,7 @@ import { FieldValues, Path, useFormContext } from 'react-hook-form';
 
 interface Props<T extends FieldValues> {
 	name: Path<T>;
-	label: string;
+	label?: string;
 	required?: boolean;
 	disabled?: boolean;
 	column?: boolean;
@@ -75,13 +75,15 @@ export const CheckboxField = <T extends FieldValues>({
 								checked={field.value}
 								disabled={disabled}
 							/>
-							<FormLabel
-								htmlFor={name}
-								className={cn(reverse ? 'order-0' : 'order-1')}
-							>
-								<span>{label}</span>
-								{required && <span className="ml-1 text-red-500">*</span>}
-							</FormLabel>
+							{label && (
+								<FormLabel
+									htmlFor={name}
+									className={cn(reverse ? 'order-0' : 'order-1')}
+								>
+									<span>{label}</span>
+									{required && <span className='ml-1 text-red-500'>*</span>}
+								</FormLabel>
+							)}
 						</div>
 					</FormControl>
 				</FormItem>

@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { FC } from 'react';
-import { Button, ButtonProps } from '../../ui/button';
+import { Button, ButtonProps } from '@/components/ui/button';
 
 type SubmitButtonProps = ButtonProps & {
 	isLoading?: boolean;

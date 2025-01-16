@@ -7,7 +7,7 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from '../../ui/form';
+} from '@/components/ui/form';
 
 interface Props<T extends FieldValues> {
 	name: Path<T>;

@@ -12,7 +12,12 @@
 import { FieldValues, Path, useFormContext } from 'react-hook-form';
 
 import { DateTimePicker } from '@/components/ui/date-time-picker';
-import { FormField, FormItem, FormLabel, FormMessage } from '../../ui/form';
+import {
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from '@/components/ui/form';
 
 interface Props<T extends FieldValues> {
 	name: Path<T>;

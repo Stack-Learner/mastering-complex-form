@@ -10,16 +10,16 @@
 import { cn } from '@/lib/utils';
 import { LucideIcon, X } from 'lucide-react';
 import { FieldValues, Path, useFormContext } from 'react-hook-form';
-import { Button } from '../../ui/button';
+import { Button } from '@/components/ui/button';
 import {
 	FormControl,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from '../../ui/form';
-import { LoadingSpinner } from '../../ui/loading-spinner';
-import { Textarea } from '../../ui/textarea';
+} from '@/components/ui/form';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { Textarea } from '@/components/ui/textarea';
 
 interface Props<T extends FieldValues> {
 	name: Path<T>;

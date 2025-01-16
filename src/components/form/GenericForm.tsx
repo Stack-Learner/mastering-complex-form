@@ -28,6 +28,7 @@ export type GenericFormProps<TSchema extends ZodType> = {
 	onSubmit: SubmitHandler<z.infer<TSchema>>;
 	children: ReactNode;
 	ref: Ref<GenericFormRef<z.infer<TSchema>>>;
+	mode?: 'onChange' | 'onBlur' | 'onSubmit' | 'all';
 } & React.ComponentPropsWithoutRef<'form'>;
 
 /**
@@ -47,10 +48,12 @@ export const GenericForm = <TSchema extends ZodType>({
 	schema,
 	onSubmit,
 	children,
+	mode = 'onChange',
 }: GenericFormProps<TSchema>) => {
 	const form = useForm<z.infer<TSchema>>({
 		defaultValues: initialValues as DefaultValues<z.infer<TSchema>>,
 		resolver: zodResolver(schema),
+		mode,
 	});
 
 	useImperativeHandle(ref, () => {

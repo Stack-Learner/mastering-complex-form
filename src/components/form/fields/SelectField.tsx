@@ -5,14 +5,14 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from '../../ui/form';
+} from '@/components/ui/form';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from '../../ui/select';
+} from '@/components/ui/select';
 
 interface Props<T extends FieldValues> {
 	name: Path<T>;

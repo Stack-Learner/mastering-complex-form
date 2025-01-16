@@ -50,12 +50,12 @@ export const OnboardingForm = () => {
 	];
 
 	return (
-		<div className="space-y-8">
+		<div className='space-y-8'>
 			<HorizontalTimeline
 				currentIndex={currentStep}
 				totalSteps={steps.length}
 			/>
-			{steps[currentStep]}
+			x{steps[currentStep]}
 		</div>
 	);
 };
