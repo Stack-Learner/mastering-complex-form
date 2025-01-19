@@ -8,6 +8,22 @@ const phoneSchema = z.string().min(1).regex(phoneRegex, {
 	message: 'Please enter a valid phone number',
 });
 
+const MAX_FILE_SIZE = 5000000; // 5MB
+const ACCEPTED_IMAGE_TYPES = [
+	'image/jpeg',
+	'image/jpg',
+	'image/png',
+	'image/webp',
+];
+
+const passwordRequirements = {
+	minLength: 8,
+	hasUpperCase: /[A-Z]/,
+	hasLowerCase: /[a-z]/,
+	hasNumber: /[0-9]/,
+	hasSpecialChar: /[^A-Za-z0-9]/,
+};
+
 const EmploymentDetails1 = z.object({
 	jobTitle: z.string().min(1, 'Job title is required'),
 	department: z.enum(['engineering', 'hr', 'marketing']),
@@ -54,6 +70,37 @@ export const EmployeeSchema = z.object({
 		dob: z.date({
 			message: 'Please enter a valid date',
 		}),
+		// profileImage: z
+		// 	.any()
+		// 	.refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB`)
+		// 	.refine(
+		// 		(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+		// 		'Only .jpg, .jpeg, .png and .webp formats are supported'
+		// 	)
+		// 	.optional(),
+		profileImage: z.string().url('Invalid image URL').optional(),
+		password: z
+			.string()
+			.min(
+				passwordRequirements.minLength,
+				`Password must be at least ${passwordRequirements.minLength} characters`
+			)
+			.regex(
+				passwordRequirements.hasUpperCase,
+				'Password must contain at least one uppercase letter'
+			)
+			.regex(
+				passwordRequirements.hasLowerCase,
+				'Password must contain at least one lowercase letter'
+			)
+			.regex(
+				passwordRequirements.hasNumber,
+				'Password must contain at least one number'
+			)
+			.regex(
+				passwordRequirements.hasSpecialChar,
+				'Password must contain at least one special character'
+			),
 		gender: z.enum(['male', 'female', 'other']),
 		contactNumber: phoneSchema,
 		personalEmail: z.string().email('Please enter a valid email'),
@@ -108,6 +155,7 @@ export const initialValues: EmployeeFormValue = {
 	personalInformation: {
 		firstName: '',
 		lastName: '',
+		password: '',
 		dob: new Date(),
 		gender: 'male' as const,
 		contactNumber: '',
@@ -142,6 +190,8 @@ export const initialValues: EmployeeFormValue = {
 export const personalDetailsPaths = [
 	'personalInformation.firstName',
 	'personalInformation.lastName',
+	'personalInformation.profileImage',
+	'personalInformation.password',
 	'personalInformation.dob',
 	'personalInformation.contactNumber',
 	'personalInformation.personalEmail',

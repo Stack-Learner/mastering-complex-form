@@ -1,4 +1,6 @@
 import { DateField } from '@/components/form/fields/DateField';
+import { ImageLinkField } from '@/components/form/fields/ImageLinkField';
+import { PasswordField } from '@/components/form/fields/PasswordField';
 import { RadioGroupField } from '@/components/form/fields/RadioGroupField';
 import { TextAreaField } from '@/components/form/fields/TextAreaField';
 import { TextField } from '@/components/form/fields/TextField';
@@ -46,18 +48,27 @@ export const PersonalDetailsFields = () => {
 							placeholder="Enter Last name"
 							required
 						/>
+						<PasswordField<EmployeeFormValue>
+							name="personalInformation.password"
+							label="Password"
+							placeholder="Enter Password"
+							required
+						/>
 						<DateField<EmployeeFormValue>
 							name="personalInformation.dob"
 							label="Date of Birth"
 							required
 						/>
-						<div></div>
 						<RadioGroupField<EmployeeFormValue>
 							name="personalInformation.gender"
 							label="Gender"
 							options={genderOptions}
 							className="col-span-full"
 							required
+						/>
+						<ImageLinkField<EmployeeFormValue>
+							name="personalInformation.profileImage"
+							label="Profile Image"
 						/>
 					</div>
 				</div>

@@ -1,0 +1,109 @@
+import { useDebounce } from '@/hooks/useDebounce';
+import { cn } from '@/lib/utils';
+import { Check, Loader2, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { FieldValues, Path, useFormContext } from 'react-hook-form';
+import {
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from '../../ui/form';
+import { Input } from '../../ui/input';
+
+type UniqueTextFieldProps<T extends FieldValues> = {
+	name: Path<T>;
+	label?: string;
+	placeholder?: string;
+	required?: boolean;
+	className?: string;
+	type?: 'text' | 'email';
+	checkFunction: (value: string) => Promise<boolean>;
+	debounceMs?: number;
+};
+
+export const UniqueTextField = <T extends FieldValues>({
+	name,
+	label,
+	placeholder,
+	required = false,
+	className,
+	type = 'text',
+	checkFunction,
+	debounceMs = 500,
+}: UniqueTextFieldProps<T>) => {
+	const [isChecking, setIsChecking] = useState(false);
+	const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
+	const { control, watch } = useFormContext<T>();
+
+	const value = watch(name);
+	const debouncedValue = useDebounce(value, debounceMs);
+
+	useEffect(() => {
+		const checkAvailability = async () => {
+			if (!debouncedValue) {
+				setIsAvailable(null);
+				return;
+			}
+
+			setIsChecking(true);
+			try {
+				const available = await checkFunction(debouncedValue);
+				setIsAvailable(available);
+			} catch (error) {
+				console.error('Availability check failed:', error);
+				setIsAvailable(null);
+			} finally {
+				setIsChecking(false);
+			}
+		};
+
+		checkAvailability();
+	}, [debouncedValue, checkFunction]);
+
+	return (
+		<FormField
+			control={control}
+			name={name}
+			render={({ field }) => (
+				<FormItem className={className}>
+					{label && (
+						<FormLabel>
+							{label}
+							{required && <span className="text-red-500 ml-1">*</span>}
+						</FormLabel>
+					)}
+					<FormControl>
+						<div className="relative">
+							<Input
+								{...field}
+								type={type}
+								placeholder={placeholder}
+								className={cn(
+									'pr-10',
+									isAvailable &&
+										'border-green-500 focus-visible:ring-green-500',
+									isAvailable === false &&
+										'border-red-500 focus-visible:ring-red-500'
+								)}
+							/>
+							<div className="absolute right-3 top-1/2 -translate-y-1/2">
+								{isChecking && (
+									<Loader2 className="h-4 w-4 animate-spin text-gray-500" />
+								)}
+								{!isChecking && isAvailable && (
+									<Check className="h-4 w-4 text-green-500" />
+								)}
+								{!isChecking && isAvailable === false && (
+									<X className="h-4 w-4 text-red-500" />
+								)}
+							</div>
+						</div>
+					</FormControl>
+					<FormMessage />
+				</FormItem>
+			)}
+		/>
+	);
+};
