@@ -27,36 +27,29 @@ export const ExperiencesPreview = () => {
 			<div className="space-y-4">
 				{formValues?.professionalExperiences &&
 				formValues.professionalExperiences.length > 0 ? (
-					formValues.professionalExperiences.map(
-						(
-							experience: NonNullable<
-								EmployeeFormValue['professionalExperiences']
-							>[0],
-							index: number
-						) => (
-							<Card key={index} className="p-4 bg-muted/50">
-								<h3 className="font-medium mb-3">Experience {index + 1}</h3>
-								<div className="grid md:grid-cols-2 gap-4">
-									<InfoItem label="Company" value={experience.companyName} />
-									<InfoItem label="Designation" value={experience.jobTitle} />
+					formValues.professionalExperiences.map((experience, index) => (
+						<Card key={index} className="p-4 bg-muted/50">
+							<h3 className="font-medium mb-3">Experience {index + 1}</h3>
+							<div className="grid md:grid-cols-2 gap-4">
+								<InfoItem label="Company" value={experience.companyName} />
+								<InfoItem label="Designation" value={experience.jobTitle} />
+								<InfoItem
+									label="Start Date"
+									value={format(experience.startDate, 'PPP')}
+								/>
+								<InfoItem
+									label="End Date"
+									value={format(experience.endDate, 'PPP')}
+								/>
+								<div className="col-span-2">
 									<InfoItem
-										label="Start Date"
-										value={format(experience.startDate, 'PPP')}
+										label="Job Summary"
+										value={experience.jobSummary ?? 'N/A'}
 									/>
-									<InfoItem
-										label="End Date"
-										value={format(experience.endDate, 'PPP')}
-									/>
-									<div className="col-span-2">
-										<InfoItem
-											label="Job Summary"
-											value={experience.jobSummary ?? 'N/A'}
-										/>
-									</div>
 								</div>
-							</Card>
-						)
-					)
+							</div>
+						</Card>
+					))
 				) : (
 					<p className="text-sm text-muted-foreground">
 						No professional experiences to display.

@@ -14,6 +14,7 @@ export const checkUsernameUnique = async (username: string) => {
 	return !takenUsernames.includes(username.toLowerCase());
 };
 
+// Mock email check function
 export const checkEmailUnique = async (email: string) => {
 	const takenEmails = [
 		'admin@example.com',
