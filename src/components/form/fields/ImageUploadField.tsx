@@ -73,7 +73,7 @@ export const ImageUploadField = <T extends FieldValues>({
 											variant="destructive"
 											size="icon"
 											className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-											onClick={() => onChange('')}
+											onClick={() => onChange(undefined)}
 											disabled={disabled}
 										>
 											<X className="h-4 w-4" />

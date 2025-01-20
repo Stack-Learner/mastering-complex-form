@@ -77,7 +77,6 @@ export const PersonalDetailsFields = () => {
 							label="Password"
 							placeholder="Enter Password"
 							required
-							showMessage={false}
 						/>
 						<DateField<EmployeeFormValue>
 							name="personalInformation.dob"
