@@ -10,6 +10,7 @@
  */
 
 import { cn } from '@/lib/utils';
+import { Loader2 } from 'lucide-react';
 
 /**
  * LoadingSpinner component
@@ -23,14 +24,7 @@ import { cn } from '@/lib/utils';
  */
 
 export const LoadingSpinner = ({ className = '' }: { className?: string }) => {
-	return (
-		<div
-			className={cn(
-				'h-10 w-10 animate-spin rounded-full border-b-2 border-gray-500',
-				className
-			)}
-		></div>
-	);
+	return <Loader2 className={cn('h-10 w-10 animate-spin', className)} />;
 };
 
 LoadingSpinner.displayName = 'LoadingSpinner';

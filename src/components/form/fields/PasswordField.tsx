@@ -1,5 +1,7 @@
+import { PasswordMessage } from '@/components/password/PasswordMessage';
+import { PasswordStrength } from '@/components/password/PasswordStrength';
 import { cn } from '@/lib/utils';
-import { Check, Eye, EyeOff, X } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { FieldValues, Path, useFormContext } from 'react-hook-form';
 import {
@@ -20,6 +22,8 @@ type PasswordFieldProps<T extends FieldValues> = {
 	icon?: boolean;
 	showIcon?: React.ReactNode;
 	hideIcon?: React.ReactNode;
+	showStrength?: boolean;
+	showMessage?: boolean;
 };
 
 type Requirement = {
@@ -35,6 +39,23 @@ const requirements: Requirement[] = [
 	{ regex: /[^A-Za-z0-9]/, label: 'At least one special character' },
 ];
 
+/**
+ * Password field component
+ *
+ * @param name - The name of the field
+ * @param label - The label of the field
+ * @param placeholder - The placeholder of the field
+ * @param required - The required status of the field
+ * @param className - The class name of the field
+ * @param icon - The icon status of the field
+ * @param showIcon - The show icon of the field
+ * @param hideIcon - The hide icon of the field
+ * @param showStrength - The show strength of the field
+ * @param showMessage - The show message of the field
+ *
+ * @returns {JSX.Element} - The password field component
+ */
+
 export const PasswordField = <T extends FieldValues>({
 	name,
 	label,
@@ -44,33 +65,14 @@ export const PasswordField = <T extends FieldValues>({
 	icon = true,
 	showIcon = <Eye size={18} />,
 	hideIcon = <EyeOff size={18} />,
+	showMessage = true,
+	showStrength = true,
 }: PasswordFieldProps<T>) => {
-	const [showPassword, setShowPassword] = useState(false);
-	const [strength, setStrength] = useState(0);
-	const [checks, setChecks] = useState<boolean[]>(
-		new Array(requirements.length).fill(false)
-	);
 	const { control, watch } = useFormContext<T>();
 	const password = watch(name);
 
-	useEffect(() => {
-		if (!password) {
-			setStrength(0);
-			setChecks(new Array(requirements.length).fill(false));
-			return;
-		}
-
-		const newChecks = requirements.map((req) => req.regex.test(password));
-		setChecks(newChecks);
-		setStrength((newChecks.filter(Boolean).length / requirements.length) * 100);
-	}, [password]);
-
-	const getStrengthColor = () => {
-		if (strength <= 25) return 'bg-red-500';
-		if (strength <= 50) return 'bg-orange-500';
-		if (strength <= 75) return 'bg-yellow-500';
-		return 'bg-green-500';
-	};
+	const { showPassword, setShowPassword, strength, checks } =
+		usePasswordField(password);
 
 	return (
 		<FormField
@@ -106,37 +108,11 @@ export const PasswordField = <T extends FieldValues>({
 					</FormControl>
 
 					<div className="space-y-2">
-						<div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-							<div
-								className={cn(
-									'h-full transition-all duration-300',
-									getStrengthColor()
-								)}
-								style={{ width: `${strength}%` }}
-							/>
-						</div>
+						{showStrength && <PasswordStrength strength={strength} />}
 
-						<div>
-							{requirements.map((req, index) => (
-								<div
-									key={req.label}
-									className="flex items-center gap-2 text-xs"
-								>
-									{checks[index] ? (
-										<Check className="text-green-500" size={12} />
-									) : (
-										<X className="text-red-500" size={12} />
-									)}
-									<span
-										className={
-											checks[index] ? 'text-green-500' : 'text-gray-500'
-										}
-									>
-										{req.label}
-									</span>
-								</div>
-							))}
-						</div>
+						{showMessage && (
+							<PasswordMessage requirements={requirements} checks={checks} />
+						)}
 					</div>
 
 					<FormMessage />
@@ -144,4 +120,33 @@ export const PasswordField = <T extends FieldValues>({
 			)}
 		/>
 	);
+};
+
+PasswordField.displayName = 'PasswordField';
+
+const usePasswordField = (password: string) => {
+	const [showPassword, setShowPassword] = useState(false);
+	const [strength, setStrength] = useState(0);
+	const [checks, setChecks] = useState<boolean[]>(
+		new Array(requirements.length).fill(false)
+	);
+
+	useEffect(() => {
+		if (!password) {
+			setStrength(0);
+			setChecks(new Array(requirements.length).fill(false));
+			return;
+		}
+
+		const newChecks = requirements.map((req) => req.regex.test(password));
+		setChecks(newChecks);
+		setStrength((newChecks.filter(Boolean).length / requirements.length) * 100);
+	}, [password]);
+
+	return {
+		showPassword,
+		setShowPassword,
+		strength,
+		checks,
+	};
 };
