@@ -6,6 +6,7 @@ import { Stepper } from '@/components/stepper';
 import { useRef } from 'react';
 import { EmploymentDetailsFields } from './EmploymentDetailsFields';
 import { ExperiencesFields } from './ExperiencesFields';
+import { useTriggerForm } from './hooks/useTriggerForm';
 import { PersonalDetailsFields } from './PersonalDetailsFields';
 import { PolicyAgreementsFields } from './PolicyAgreementsFields';
 import { PreviewEmployee } from './PreviewEmployee';
@@ -21,7 +22,6 @@ import {
 	skillsAndGoalsPaths,
 } from './schema';
 import { SkillsAndGoalsFields } from './SkillsAndGoalsFields';
-import { useTriggerForm } from './useTriggerForm';
 
 export const EmployeeOnboarding = () => {
 	const formRef = useRef<GenericFormRef<EmployeeFormValue>>(null);
