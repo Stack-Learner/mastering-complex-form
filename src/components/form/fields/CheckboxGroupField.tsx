@@ -21,6 +21,7 @@ type Props<T extends FieldValues> = {
 	className?: string;
 	disabled?: boolean;
 	column?: boolean;
+	required?: boolean;
 };
 
 /**
@@ -32,6 +33,7 @@ type Props<T extends FieldValues> = {
  * @param className - The class name of the field.
  * @param disabled - The disabled flag of the field.
  * @param column - The column flag of the field.
+ * @param required - The required flag of the field.
  * @returns A checkbox group field component.
  *
  * @example
@@ -55,6 +57,7 @@ export const CheckboxGroupField = <T extends FieldValues>({
 	className,
 	disabled,
 	column = true,
+	required,
 }: Props<T>) => {
 	const { control } = useFormContext<T>();
 
@@ -64,7 +67,12 @@ export const CheckboxGroupField = <T extends FieldValues>({
 			name={name}
 			render={({ field }) => (
 				<FormItem className={className}>
-					{label && <FormLabel>{label}</FormLabel>}
+					{label && (
+						<FormLabel htmlFor={name}>
+							<span>{label}</span>
+							{required && <span className="ml-1 text-red-500">*</span>}
+						</FormLabel>
+					)}
 					<FormControl>
 						<div
 							className={cn(
