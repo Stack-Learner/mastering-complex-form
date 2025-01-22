@@ -174,7 +174,7 @@ export const initialValues: EmployeeFormValue = {
 		firstName: '',
 		lastName: '',
 		username: '',
-		password: '@1234',
+		password: '',
 		dob: new Date(),
 		gender: 'male' as const,
 		contactNumber: '',
