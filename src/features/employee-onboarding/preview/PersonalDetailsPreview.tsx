@@ -2,9 +2,9 @@ import { Card } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { Calendar, Heart, Home, Mail, Phone, User } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
-import { InfoItem } from './components/InfoItem';
-import { PreviewHeader } from './components/PreviewHeader';
-import { EmployeeFormValue } from './schema';
+import { InfoItem } from '../components/InfoItem';
+import { PreviewHeader } from '../components/PreviewHeader';
+import { EmployeeFormValue } from '../schema';
 
 /**
  * PersonalDetailsPreview. A personal details preview component.

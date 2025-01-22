@@ -1,9 +1,9 @@
 import { Card } from '@/components/ui/card';
 import { GraduationCap } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
-import { InfoItem } from './components/InfoItem';
-import { PreviewHeader } from './components/PreviewHeader';
-import { EmployeeFormValue } from './schema';
+import { InfoItem } from '../components/InfoItem';
+import { PreviewHeader } from '../components/PreviewHeader';
+import { EmployeeFormValue } from '../schema';
 
 export const SkillsAndGoalsPreview = () => {
 	const formContext = useFormContext<EmployeeFormValue>();
@@ -25,7 +25,7 @@ export const SkillsAndGoalsPreview = () => {
 						{formValues.skillsAndGoals.skills &&
 						formValues.skillsAndGoals.skills.length > 0 ? (
 							formValues.skillsAndGoals.skills
-								.filter((skill): skill is string => !!skill)
+								.filter((skill) => !!skill)
 								.map((skill, index) => (
 									<span
 										key={index}

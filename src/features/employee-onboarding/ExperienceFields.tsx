@@ -2,7 +2,7 @@ import { FieldArray } from '@/components/form/FieldArray';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Briefcase, PlusCircle } from 'lucide-react';
-import { ExperienceCard } from './components/ExperienceCard';
+import { ExperienceCard } from './ExperienceCard';
 import { StepHeader } from './components/StepHeader';
 import { EmployeeFormValue } from './schema';
 

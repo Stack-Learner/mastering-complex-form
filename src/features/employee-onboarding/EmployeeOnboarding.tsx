@@ -1,17 +1,15 @@
-import {
-	GenericForm,
-	type GenericFormRef,
-} from '@/components/form/GenericForm';
+import { GenericForm, GenericFormRef } from '@/components/form/GenericForm';
 import { Stepper } from '@/components/stepper';
 import { useRef } from 'react';
-import { EmploymentDetailsFields } from './EmploymentDetailsFields';
-import { ExperiencesFields } from './ExperiencesFields';
+import { EmploymentDetailsFields } from './EmploymentDetails';
+import { ExperiencesFields } from './ExperienceFields';
+import { useTriggerForm } from './hooks/useTriggerForm';
 import { PersonalDetailsFields } from './PersonalDetailsFields';
 import { PolicyAgreementsFields } from './PolicyAgreementsFields';
-import { PreviewEmployee } from './PreviewEmployee';
+import { PreviewEmployee } from './preview/PreviewEmployee';
 import {
 	confirmationPaths,
-	type EmployeeFormValue,
+	EmployeeFormValue,
 	EmployeeSchema,
 	employmentDetailsPaths,
 	experiencesPaths,
@@ -21,16 +19,15 @@ import {
 	skillsAndGoalsPaths,
 } from './schema';
 import { SkillsAndGoalsFields } from './SkillsAndGoalsFields';
-import { useTriggerForm } from './useTriggerForm';
 
 export const EmployeeOnboarding = () => {
 	const formRef = useRef<GenericFormRef<EmployeeFormValue>>(null);
-	const { triggerForm } = useTriggerForm<EmployeeFormValue>();
 	const submitRef = useRef<HTMLButtonElement>(null);
+	const triggerForm = useTriggerForm<EmployeeFormValue>();
 
-	formRef.current?.form.handleSubmit((values) => {
-		console.log('handleSubmit', values);
-	});
+	// formRef.current?.form.handleSubmit((values) => {
+	// 	console.log('Form submitted', values);
+	// });
 
 	const clickSubmit = () => {
 		submitRef.current?.click();
@@ -41,13 +38,12 @@ export const EmployeeOnboarding = () => {
 			schema={EmployeeSchema}
 			initialValues={initialValues}
 			onSubmit={(values) => {
-				console.log('onSubmit', values);
+				console.log('Form submitted', values);
 				alert(JSON.stringify(values));
 			}}
 			ref={formRef}
 		>
 			<Stepper onComplete={clickSubmit}>
-				{/* Personal Details */}
 				<Stepper.Step
 					validate={() =>
 						triggerForm(formRef.current?.form, [...personalDetailsPaths])
@@ -55,8 +51,6 @@ export const EmployeeOnboarding = () => {
 				>
 					<PersonalDetailsFields />
 				</Stepper.Step>
-
-				{/* Employment Details */}
 				<Stepper.Step
 					validate={() =>
 						triggerForm(formRef.current?.form, [...employmentDetailsPaths])
@@ -64,8 +58,6 @@ export const EmployeeOnboarding = () => {
 				>
 					<EmploymentDetailsFields />
 				</Stepper.Step>
-
-				{/* Professional Experiences */}
 				<Stepper.Step
 					validate={() =>
 						triggerForm(formRef.current?.form, [...experiencesPaths])
@@ -73,8 +65,6 @@ export const EmployeeOnboarding = () => {
 				>
 					<ExperiencesFields />
 				</Stepper.Step>
-
-				{/* Skills & Goals */}
 				<Stepper.Step
 					validate={() =>
 						triggerForm(formRef.current?.form, [...skillsAndGoalsPaths])
@@ -82,8 +72,6 @@ export const EmployeeOnboarding = () => {
 				>
 					<SkillsAndGoalsFields />
 				</Stepper.Step>
-
-				{/* Policy Agreements */}
 				<Stepper.Step
 					validate={() =>
 						triggerForm(formRef.current?.form, [...policyAgreementsPaths])
@@ -91,8 +79,6 @@ export const EmployeeOnboarding = () => {
 				>
 					<PolicyAgreementsFields />
 				</Stepper.Step>
-
-				{/* Preview Employee */}
 				<Stepper.Step
 					validate={() =>
 						triggerForm(formRef.current?.form, [...confirmationPaths])
@@ -102,11 +88,11 @@ export const EmployeeOnboarding = () => {
 				</Stepper.Step>
 			</Stepper>
 
-			<button ref={submitRef} type="submit" hidden>
+			<button type="submit" hidden ref={submitRef}>
 				Submit
 			</button>
 		</GenericForm>
 	);
 };
 
-export default EmployeeOnboarding;
+EmployeeOnboarding.displayName = 'EmployeeOnboarding';

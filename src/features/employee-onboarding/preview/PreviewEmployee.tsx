@@ -1,12 +1,12 @@
 import { CheckboxField } from '@/components/form/fields/CheckboxField';
+import { Card } from '@/components/ui/card';
 import { Eye } from 'lucide-react';
-import { Card } from '../../components/ui/card';
-import { StepHeader } from './components/StepHeader';
+import { StepHeader } from '../components/StepHeader';
+import { EmployeeFormValue } from '../schema';
 import { EmploymentDetailsPreview } from './EmploymentDetailsPreview';
 import { ExperiencesPreview } from './ExperiencesPreview';
 import { PersonalDetailsPreview } from './PersonalDetailsPreview';
 import { PolicyAgreementsPreview } from './PolicyAgreementsPreview';
-import { EmployeeFormValue } from './schema';
 import { SkillsAndGoalsPreview } from './SkillsAndGoalsPreview';
 
 /**

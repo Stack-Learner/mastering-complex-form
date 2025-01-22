@@ -8,6 +8,24 @@ import { useFormContext } from 'react-hook-form';
 import { StepHeader } from './components/StepHeader';
 import { EmployeeFormValue } from './schema';
 
+const departmentOptions = [
+	{ value: 'engineering', text: 'Engineering' },
+	{ value: 'hr', text: 'HR' },
+	{ value: 'marketing', text: 'Marketing' },
+];
+
+const managerOptions = [
+	{ value: 'John Doe', text: 'John Doe' },
+	{ value: 'Jane Doe', text: 'Jane Doe' },
+	{ value: 'Michael Doe', text: 'Michael Doe' },
+];
+
+const jobTypeOptions = [
+	{ value: 'Full-Time', text: 'Full Time' },
+	{ value: 'Part-Time', text: 'Part Time' },
+	{ value: 'Contract', text: 'Contract' },
+];
+
 /**
  * The employment details fields.
  * @returns The employment details fields.
@@ -58,22 +76,14 @@ export const EmploymentDetailsFields = () => {
 						<SelectField<EmployeeFormValue>
 							name="employmentDetails.department"
 							label="Department"
-							options={[
-								{ value: 'engineering', text: 'Engineering' },
-								{ value: 'hr', text: 'HR' },
-								{ value: 'marketing', text: 'Marketing' },
-							]}
+							options={departmentOptions}
 							placeholder="Select a department"
 							required
 						/>
 						<SelectField<EmployeeFormValue>
 							name="employmentDetails.reportingManager"
 							label="Reporting Manager"
-							options={[
-								{ value: 'John Doe', text: 'John Doe' },
-								{ value: 'Jane Doe', text: 'Jane Doe' },
-								{ value: 'Michael Doe', text: 'Michael Doe' },
-							]}
+							options={managerOptions}
 							placeholder="Select a manager"
 							required
 						/>
@@ -87,11 +97,7 @@ export const EmploymentDetailsFields = () => {
 						<RadioGroupField<EmployeeFormValue>
 							name="employmentDetails.jobType"
 							label="Job Type"
-							options={[
-								{ value: 'Full-Time', text: 'Full Time' },
-								{ value: 'Part-Time', text: 'Part Time' },
-								{ value: 'Contract', text: 'Contract' },
-							]}
+							options={jobTypeOptions}
 							className="col-span-full"
 							required
 						/>

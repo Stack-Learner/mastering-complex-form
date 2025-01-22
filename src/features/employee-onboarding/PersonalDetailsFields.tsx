@@ -1,13 +1,22 @@
 import { DateField } from '@/components/form/fields/DateField';
-import { ImageLinkField } from '@/components/form/fields/ImageLinkField';
+import { ImageUploadField } from '@/components/form/fields/ImageUploadField';
 import { PasswordField } from '@/components/form/fields/PasswordField';
 import { RadioGroupField } from '@/components/form/fields/RadioGroupField';
 import { TextAreaField } from '@/components/form/fields/TextAreaField';
 import { TextField } from '@/components/form/fields/TextField';
+import { UniqueTextField } from '@/components/form/fields/UniqueTextField';
 import { Card } from '@/components/ui/card';
+import { FormLabel } from '@/components/ui/form';
+import { generateDummyImageUrl } from '@/lib/utils/generateDummyImageUrl';
+import { getAge } from '@/lib/utils/getAge';
 import { User2 } from 'lucide-react';
+import { useFormContext } from 'react-hook-form';
 import { StepHeader } from './components/StepHeader';
-import { EmployeeFormValue } from './schema';
+import {
+	checkEmailUnique,
+	checkUsernameUnique,
+	EmployeeFormValue,
+} from './schema';
 
 const genderOptions = [
 	{ value: 'male', text: 'Male' },
@@ -21,6 +30,9 @@ const genderOptions = [
  */
 
 export const PersonalDetailsFields = () => {
+	const { watch } = useFormContext<EmployeeFormValue>();
+	const dob = watch('personalInformation.dob');
+
 	return (
 		<Card className="p-6 space-y-6">
 			{/* Header Section */}
@@ -36,6 +48,12 @@ export const PersonalDetailsFields = () => {
 				<div className="space-y-4">
 					<h2 className="text-lg font-medium">Basic Details</h2>
 					<div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
+						<ImageUploadField<EmployeeFormValue>
+							name="personalInformation.profileImage"
+							label="Profile Image"
+							onUpload={generateDummyImageUrl}
+						/>
+						<div></div>
 						<TextField<EmployeeFormValue>
 							name="personalInformation.firstName"
 							label="First Name"
@@ -48,27 +66,39 @@ export const PersonalDetailsFields = () => {
 							placeholder="Enter Last name"
 							required
 						/>
+						<UniqueTextField<EmployeeFormValue>
+							name="personalInformation.username"
+							label="Username"
+							placeholder="Enter Username"
+							required
+							checkFunction={checkUsernameUnique}
+						/>
+
 						<PasswordField<EmployeeFormValue>
 							name="personalInformation.password"
 							label="Password"
 							placeholder="Enter Password"
 							required
+							showMessage
+							showStrength
 						/>
 						<DateField<EmployeeFormValue>
 							name="personalInformation.dob"
 							label="Date of Birth"
 							required
 						/>
+						<div className="mt-2 space-y-2.5">
+							<FormLabel className="block">Age</FormLabel>
+							<div className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background">
+								{dob ? getAge(dob.toISOString()) : '-'}
+							</div>
+						</div>
 						<RadioGroupField<EmployeeFormValue>
 							name="personalInformation.gender"
 							label="Gender"
 							options={genderOptions}
 							className="col-span-full"
 							required
-						/>
-						<ImageLinkField<EmployeeFormValue>
-							name="personalInformation.profileImage"
-							label="Profile Image"
 						/>
 					</div>
 				</div>
@@ -83,11 +113,12 @@ export const PersonalDetailsFields = () => {
 							placeholder="Enter your contact number"
 							required
 						/>
-						<TextField<EmployeeFormValue>
+						<UniqueTextField<EmployeeFormValue>
 							name="personalInformation.personalEmail"
 							label="Personal Email"
 							placeholder="Enter your personal email"
 							required
+							checkFunction={checkEmailUnique}
 						/>
 						<TextAreaField<EmployeeFormValue>
 							name="personalInformation.homeAddress"

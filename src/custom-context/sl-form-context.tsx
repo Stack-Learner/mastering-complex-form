@@ -2,21 +2,25 @@
 import { createContext, useContext } from 'react';
 import { Control, FieldValues } from 'react-hook-form';
 
-export type SLFormContext<TFormValues extends FieldValues = any> = {
+export type GenericFormContext<TFormValues extends FieldValues = any> = {
 	control: Control<TFormValues>;
 };
 
-export const SLFormContext = createContext<null | SLFormContext>(null);
+export const GenericFormContext = createContext<null | GenericFormContext>(
+	null
+);
 
 /**
  * A hook to use the form context.
  * @returns The form context.
  */
 
-export const useSLFormContext = <TFormValues extends FieldValues = any>() => {
-	const context = useContext(SLFormContext);
+export const useGenericFormContext = <
+	TFormValues extends FieldValues = any
+>() => {
+	const context = useContext(GenericFormContext);
 	if (!context) {
 		throw new Error('Form fields must be used within a SmartForm.');
 	}
-	return context as SLFormContext<TFormValues>;
+	return context as GenericFormContext<TFormValues>;
 };

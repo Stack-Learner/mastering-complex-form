@@ -8,13 +8,21 @@ const phoneSchema = z.string().min(1).regex(phoneRegex, {
 	message: 'Please enter a valid phone number',
 });
 
-const MAX_FILE_SIZE = 5000000; // 5MB
-const ACCEPTED_IMAGE_TYPES = [
-	'image/jpeg',
-	'image/jpg',
-	'image/png',
-	'image/webp',
-];
+// Mock username check function
+export const checkUsernameUnique = async (username: string) => {
+	const takenUsernames = ['admin', 'root', 'test'];
+	return !takenUsernames.includes(username.toLowerCase());
+};
+
+// Mock email check function
+export const checkEmailUnique = async (email: string) => {
+	const takenEmails = [
+		'admin@example.com',
+		'root@example.com',
+		'test@example.com',
+	];
+	return !takenEmails.includes(email.toLowerCase());
+};
 
 const passwordRequirements = {
 	minLength: 8,
@@ -67,18 +75,22 @@ export const EmployeeSchema = z.object({
 	personalInformation: z.object({
 		firstName: z.string().min(1, 'First name is required'),
 		lastName: z.string().min(1, 'Last name is required'),
+		username: z
+			.string()
+			.min(3, 'Username must be at least 3 characters')
+			.max(20, 'Username cannot exceed 20 characters')
+			.regex(
+				/^[a-zA-Z0-9._-]+$/,
+				'Username can only contain letters, numbers, dots, dashes and underscores'
+			)
+			.refine(
+				async (username) => await checkUsernameUnique(username),
+				'Username is already taken'
+			),
 		dob: z.date({
 			message: 'Please enter a valid date',
 		}),
-		// profileImage: z
-		// 	.any()
-		// 	.refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB`)
-		// 	.refine(
-		// 		(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-		// 		'Only .jpg, .jpeg, .png and .webp formats are supported'
-		// 	)
-		// 	.optional(),
-		profileImage: z.string().url('Invalid image URL').optional(),
+		profileImage: z.string().url().optional(),
 		password: z
 			.string()
 			.min(
@@ -103,7 +115,13 @@ export const EmployeeSchema = z.object({
 			),
 		gender: z.enum(['male', 'female', 'other']),
 		contactNumber: phoneSchema,
-		personalEmail: z.string().email('Please enter a valid email'),
+		personalEmail: z
+			.string()
+			.email('Invalid email format')
+			.refine(
+				async (email) => await checkEmailUnique(email),
+				'Email is already taken'
+			),
 		homeAddress: z.string().min(1, 'Home address is required'),
 		emergencyContact: z.object({
 			name: z.string().min(1, 'Emergency contact name is required'),
@@ -155,7 +173,8 @@ export const initialValues: EmployeeFormValue = {
 	personalInformation: {
 		firstName: '',
 		lastName: '',
-		password: '',
+		username: '',
+		password: '@1234',
 		dob: new Date(),
 		gender: 'male' as const,
 		contactNumber: '',
@@ -190,6 +209,7 @@ export const initialValues: EmployeeFormValue = {
 export const personalDetailsPaths = [
 	'personalInformation.firstName',
 	'personalInformation.lastName',
+	'personalInformation.username',
 	'personalInformation.profileImage',
 	'personalInformation.password',
 	'personalInformation.dob',

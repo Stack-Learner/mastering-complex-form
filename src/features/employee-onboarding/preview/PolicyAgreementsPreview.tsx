@@ -1,9 +1,9 @@
 import { Card } from '@/components/ui/card';
 import { ScrollText } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
-import { AgreementItem } from './components/AgreementItem';
-import { PreviewHeader } from './components/PreviewHeader';
-import { EmployeeFormValue } from './schema';
+import { AgreementItem } from '../components/AgreementItem';
+import { PreviewHeader } from '../components/PreviewHeader';
+import { EmployeeFormValue } from '../schema';
 
 export const PolicyAgreementsPreview = () => {
 	const formContext = useFormContext<EmployeeFormValue>();

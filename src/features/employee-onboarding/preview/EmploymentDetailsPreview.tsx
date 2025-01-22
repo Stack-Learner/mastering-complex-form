@@ -9,9 +9,9 @@ import {
 	User,
 } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
-import { InfoItem } from './components/InfoItem';
-import { PreviewHeader } from './components/PreviewHeader';
-import { EmployeeFormValue } from './schema';
+import { InfoItem } from '../components/InfoItem';
+import { PreviewHeader } from '../components/PreviewHeader';
+import { EmployeeFormValue } from '../schema';
 
 /**
  * EmploymentDetailsPreview. An employment details preview component.

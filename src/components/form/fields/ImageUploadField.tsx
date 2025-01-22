@@ -1,174 +1,170 @@
-import { cn } from '@/lib/utils';
-import { Upload, X } from 'lucide-react';
-import { useCallback, useState } from 'react';
-import { FieldValues, Path, PathValue, useFormContext } from 'react-hook-form';
-import { Button } from '../../ui/button';
+import { Button } from '@/components/ui/button';
 import {
 	FormControl,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from '../../ui/form';
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { cn } from '@/lib/utils';
+import { generateDummyImageUrl } from '@/lib/utils/generateDummyImageUrl';
+import { Image, Upload, X } from 'lucide-react';
+import { useState } from 'react';
+import { FieldValues, Path, useFormContext } from 'react-hook-form';
 
 type ImageUploadFieldProps<T extends FieldValues> = {
 	name: Path<T>;
 	label?: string;
 	required?: boolean;
 	className?: string;
-	accept?: string;
+	disabled?: boolean;
+	onUpload?: (file: File) => void;
 };
+
+/**
+ * Image upload field component
+ *
+ * @param name - The name of the field
+ * @param label - The label of the field
+ * @param required - The required status of the field
+ * @param className - The class name of the field
+ * @param disabled - The disabled status of the field
+ * @param onUpload - The file upload handler
+ *
+ * @returns {JSX.Element} - The image upload field component
+ *
+ */
 
 export const ImageUploadField = <T extends FieldValues>({
 	name,
 	label,
 	required = false,
 	className,
-	accept = 'image/*',
+	disabled = false,
+	onUpload,
 }: ImageUploadFieldProps<T>) => {
-	const [preview, setPreview] = useState<string | null>(null);
-	const [isDragging, setIsDragging] = useState(false);
-	const { control, setValue } = useFormContext<T>();
+	const { control } = useFormContext<T>();
 
-	const handleFile = useCallback(
-		(file: File) => {
-			if (!file.type.startsWith('image/')) return;
-
-			const reader = new FileReader();
-			reader.onloadend = () => {
-				setPreview(reader.result as string);
-				setValue(name, file as PathValue<T, Path<T>>);
-			};
-			reader.readAsDataURL(file);
-		},
-		[name, setValue]
-	);
-
-	const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-		e.preventDefault();
-		e.stopPropagation();
-	}, []);
-
-	const handleDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-		e.preventDefault();
-		e.stopPropagation();
-		setIsDragging(true);
-	}, []);
-
-	const handleDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-		e.preventDefault();
-		e.stopPropagation();
-		setIsDragging(false);
-	}, []);
-
-	const handleDrop = useCallback(
-		(e: React.DragEvent<HTMLDivElement>) => {
-			e.preventDefault();
-			e.stopPropagation();
-			setIsDragging(false);
-
-			const file = e.dataTransfer.files?.[0];
-			if (file) handleFile(file);
-		},
-		[handleFile]
-	);
-
-	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
-		if (file) handleFile(file);
-	};
-
-	const handleRemove = () => {
-		setPreview(null);
-		setValue(name, null as PathValue<T, Path<T>>);
-	};
+	const { loading, handleFileChange } = useImageLinkField();
 
 	return (
 		<FormField
 			control={control}
 			name={name}
-			render={({ field }) => (
+			render={({ field: { value, onChange } }) => (
 				<FormItem className={cn(className)}>
 					{label && (
 						<FormLabel>
-							{label}
-							{required && <span className="text-red-500 ml-1">*</span>}
+							<span>{label}</span>
+							{required && <span className="ml-1 text-red-500">*</span>}
 						</FormLabel>
 					)}
-
 					<FormControl>
-						<div className="space-y-4">
-							{!preview ? (
-								<div
-									className="flex items-center justify-center w-full"
-									onDragOver={handleDragOver}
-									onDragEnter={handleDragEnter}
-									onDragLeave={handleDragLeave}
-									onDrop={handleDrop}
-								>
-									<label
-										className={cn(
-											'flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer transition-all duration-200',
-											isDragging
-												? 'border-primary bg-primary/5'
-												: 'border-gray-300 bg-gray-50 hover:bg-gray-100'
-										)}
-									>
-										<div className="flex flex-col items-center justify-center pt-5 pb-6">
-											<Upload
-												className={cn(
-													'w-10 h-10 mb-3',
-													isDragging ? 'text-primary' : 'text-gray-400'
-												)}
-											/>
-											<p className="mb-2 text-sm text-gray-500">
-												<span className="font-semibold">
-													{isDragging
-														? 'Drop the file here'
-														: 'Click to upload'}
-												</span>
-												{!isDragging && ' or drag and drop'}
-											</p>
-											<p className="text-xs text-gray-500">
-												PNG, JPG, GIF up to 10MB
-											</p>
-										</div>
-										<input
-											{...field}
-											type="file"
-											className="hidden"
-											accept={accept}
-											onChange={handleImageChange}
-										/>
-									</label>
-								</div>
-							) : (
-								<div className="relative w-full h-64 rounded-lg overflow-hidden group">
+						<div className="flex flex-col gap-4">
+							{value ? (
+								<div className="relative group h-48 w-48">
 									<img
-										src={preview}
+										src={value}
 										alt="Preview"
-										className="w-full h-full object-cover"
+										className="h-full w-full rounded-lg object-cover"
 									/>
-									<div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+									<div className="absolute inset-x-0 bottom-0 h-0 bg-black/50 group-hover:h-full transition-all duration-300 rounded-lg flex items-center justify-center">
 										<Button
 											type="button"
 											variant="destructive"
-											size="sm"
-											onClick={handleRemove}
-											className="flex items-center gap-2"
+											size="icon"
+											className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+											onClick={() => onChange(undefined)}
+											disabled={disabled}
 										>
-											<X size={16} />
-											Remove
+											<X className="h-4 w-4" />
 										</Button>
 									</div>
+								</div>
+							) : (
+								<div className="flex h-48 w-48 flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-200 bg-gray-50">
+									{loading ? (
+										<LoadingSpinner />
+									) : (
+										<div
+											onClick={() => document.getElementById(name)?.click()}
+											className="flex h-48 w-48 flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-200 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
+										>
+											<Image className="h-8 w-8 text-gray-400" />
+											<Input
+												type="file"
+												accept="image/*"
+												className="hidden"
+												onChange={(e) =>
+													handleFileChange(e, onChange, onUpload)
+												}
+												id={name}
+												disabled={disabled}
+											/>
+											<Button
+												type="button"
+												variant="secondary"
+												onClick={(e) => e.stopPropagation()}
+												disabled={disabled}
+											>
+												<Upload className="mr-2 h-4 w-4" />
+												Upload Image
+											</Button>
+										</div>
+									)}
 								</div>
 							)}
 						</div>
 					</FormControl>
-
 					<FormMessage />
 				</FormItem>
 			)}
 		/>
 	);
+};
+
+ImageUploadField.displayName = 'ImageLinkField';
+
+/**
+ * Custom hook to handle image upload
+ *
+ * @returns {Object} - Object containing loading state and file change handler
+ */
+
+const useImageLinkField = () => {
+	const [loading, setLoading] = useState(false);
+
+	const handleFileChange = async (
+		event: React.ChangeEvent<HTMLInputElement>,
+		onChange: (...event: unknown[]) => void,
+		onUpload?: (file: File) => void
+	) => {
+		const file = event.target.files?.[0];
+		if (!file) return;
+
+		if (!onUpload) {
+			setLoading(true);
+			// Simulate upload delay
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+			const dummyUrl = generateDummyImageUrl();
+			onChange(dummyUrl);
+			return;
+		}
+
+		try {
+			setLoading(true);
+			// Simulate upload delay
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+			const dummyUrl = onUpload(file);
+			onChange(dummyUrl);
+		} catch (error) {
+			console.error('Upload failed:', error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	return { loading, handleFileChange };
 };

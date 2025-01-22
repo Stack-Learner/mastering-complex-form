@@ -4,7 +4,7 @@ import { TextField } from '@/components/form/fields/TextField';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Building, Trash2 } from 'lucide-react';
-import { EmployeeFormValue } from '../schema';
+import { EmployeeFormValue } from './schema';
 
 interface ExperienceCardProps {
 	index: number;
